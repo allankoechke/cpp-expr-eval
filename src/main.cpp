@@ -3,11 +3,11 @@
 #include <string>
 #include <format>
 
-#include "../includes/expr-eval/frontend/lexer.h"
-#include "../includes/expr-eval/frontend/parser.h"
-#include "../includes/expr-eval/frontend/ast.h"
-#include "../includes/expr-eval/backend/runtime.h"
-#include "../includes/expr-eval/backend/interpreter.h"
+#include "../include/expr-eval/frontend/lexer.h"
+#include "../include/expr-eval/frontend/parser.h"
+#include "../include/expr-eval/frontend/ast.h"
+#include "../include/expr-eval/backend/runtime.h"
+#include "../include/expr-eval/backend/interpreter.h"
 
 // REPL
 int main() {
@@ -20,7 +20,8 @@ int main() {
     ip.addVar("PI", RuntimeVar(3.14));
 
     while(true) {
-        std::cout << ">>> ";
+        std::cout << ">>> " << std::flush;
+
         std::string input;
         std::getline(std::cin, input);
 
@@ -31,7 +32,7 @@ int main() {
             auto res = ip.eval(input);
             std::cout << res.toString() << std::endl;
        } catch(const std::exception& e) {
-           std::cerr << e.what() << std::endl;
+           std::cout << "error: " << e.what() << std::endl;
        }
     }
     return 0;
