@@ -1,8 +1,6 @@
 #ifndef RUNTIME_H
 #define RUNTIME_H
 
-#include <complex>
-#include <stdexcept>
 #include <string>
 #include <format>
 
@@ -13,110 +11,34 @@ struct RuntimeVar {
         NIL,
         BOOL
     } type;
+
     std::string value;
     bool b_value = false;
     double d_value = 0.0;
 
-    RuntimeVar()
-        : type(RuntimeVarType::NIL),
-        value("nil") {}
+    RuntimeVar();
 
-    explicit RuntimeVar(const std::string& v)
-        : type(RuntimeVarType::STRING),
-        value(v) {}
+    explicit RuntimeVar(std::string  v);
 
-    explicit RuntimeVar(const bool t)
-        : type(RuntimeVarType::BOOL),
-        b_value(t),
-        value(t ? "true" : "false") {}
+    explicit RuntimeVar(bool t);
 
-    explicit RuntimeVar(const double d)
-        : type(RuntimeVarType::NUMBER),
-        d_value(d),
-        value(std::format("{}", d)) {}
+    explicit RuntimeVar(double d);
 
-    std::string typeStr() {
-        switch(type) {
-            case RuntimeVarType::STRING: return "STRING";
-            case RuntimeVarType::NUMBER: return "NUMBER";
-            case RuntimeVarType::NIL: return "NIL";
-            case RuntimeVarType::BOOL: return "BOOL";
-            default: return "?";
-        }
-    }
+    [[nodiscard]] std::string typeStr() const;
 
-    double toDouble() {
-        if(type == RuntimeVarType::NUMBER)
-            return stod(value);
+    [[nodiscard]] double toDouble() const;
 
-        throw std::runtime_error("Expected number type");
-    }
+    [[nodiscard]] std::string toString() const;
 
-    std::string toString() {
-        return value;
-    }
+    [[nodiscard]] bool toBool() const;
 
-    bool toBool() {
-        if(value=="false" || value == "nil") return false;
-        if(type == RuntimeVarType::NUMBER) return toDouble() != 0.0f;
-        return true;
-    }
+    RuntimeVar operator+(const RuntimeVar& other) const;
 
-    RuntimeVar operator+(RuntimeVar& other) {
-        if(type != other.type)
-            throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
-                typeStr(), other.typeStr()));
+    RuntimeVar operator-(const RuntimeVar& other) const;
 
-        if(type == RuntimeVarType::STRING) {
-            return RuntimeVar{ value + other.value };
-        }
+    RuntimeVar operator*(const RuntimeVar& other) const;
 
-        if(type == RuntimeVarType::NUMBER) {
-            auto res = toDouble() + other.toDouble();
-            return RuntimeVar{ res };
-        }
-
-        throw std::runtime_error(std::format("Op '+' not supported for type {}", typeStr()));
-    }
-
-    RuntimeVar operator-(RuntimeVar& other) {
-        if(type != other.type)
-            throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
-                typeStr(), other.typeStr()));
-
-        if(type == RuntimeVarType::NUMBER) {
-            auto res = toDouble() - other.toDouble();
-            return RuntimeVar{ res };
-        }
-
-        throw std::runtime_error(std::format("Op '+' not supported for type {}", typeStr()));
-    }
-
-    RuntimeVar operator*(RuntimeVar& other) {
-        if(type != other.type)
-            throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
-                typeStr(), other.typeStr()));
-
-        if(type == RuntimeVarType::NUMBER) {
-            auto res = toDouble() * other.toDouble();
-            return RuntimeVar{ res };
-        }
-
-        throw std::runtime_error(std::format("Op '+' not supported for type {}", typeStr()));
-    }
-
-    RuntimeVar operator/(RuntimeVar& other) {
-        if(type != other.type)
-            throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
-                typeStr(), other.typeStr()));
-
-        if(type == RuntimeVarType::NUMBER) {
-            auto res = toDouble() / other.toDouble();
-            return RuntimeVar{ res };
-        }
-
-        throw std::runtime_error(std::format("Op '+' not supported for type {}", typeStr()));
-    }
+    RuntimeVar operator/(const RuntimeVar& other) const;
 };
 
 #endif // RUNTIME_H

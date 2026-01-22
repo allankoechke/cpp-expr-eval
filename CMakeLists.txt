@@ -9,4 +9,5 @@ add_executable(
         src/frontend/ast.cpp
         src/frontend/parser.cpp
         src/frontend/ast.cpp
+        src/backend/runtime.cpp
 )
