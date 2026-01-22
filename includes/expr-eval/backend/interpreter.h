@@ -1,9 +1,7 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-#include <stdexcept>
 #include <string>
-#include <format>
 #include <unordered_map>
 
 #include "runtime.h"
@@ -11,22 +9,13 @@
 
 class Interpreter {
 public:
-    Interpreter() = default;
+    Interpreter();
 
-    RuntimeVar eval(const std::string& input) {
-        parser.parse(input);
-        return parser.root().eval(m_vars);
-    }
+    RuntimeVar eval(const std::string& input);
 
-    void addVar(const std::string& ident, RuntimeVar val) {
-        m_vars[ident] = val;
-    }
+    void addVar(const std::string& ident, RuntimeVar val);
 
-    RuntimeVar getVar(const std::string& ident) {
-        if(!m_vars.contains(ident))
-            throw std::runtime_error(std::format("Undeclared variable `{}` not found!", ident));
-        return m_vars[ident];
-    }
+    RuntimeVar getVar(const std::string& ident);
 
 private:
     Parser parser;

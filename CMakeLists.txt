@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
-project(expr-eval VERSION 0.1.0)
+
+project(cpp-expr-eval VERSION 0.1.0)
+
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(
@@ -10,4 +12,5 @@ add_executable(
         src/frontend/parser.cpp
         src/frontend/ast.cpp
         src/backend/runtime.cpp
+        src/backend/interpreter.cpp
 )
