@@ -1,11 +1,7 @@
 #include <exception>
 #include <iostream>
 #include <string>
-#include <format>
 
-#include "../include/expr-eval/frontend/lexer.h"
-#include "../include/expr-eval/frontend/parser.h"
-#include "../include/expr-eval/frontend/ast.h"
 #include "../include/expr-eval/backend/runtime.h"
 #include "../include/expr-eval/backend/interpreter.h"
 
@@ -14,6 +10,7 @@ int main() {
     // Create an Interpreter instance
     Interpreter ip;
 
+    // Add global variables
     ip.addVar("f_name", RuntimeVar(std::string{"John"}));
     ip.addVar("l_name", RuntimeVar(std::string{"Doe"}));
     ip.addVar("x", RuntimeVar(23.45));
@@ -30,7 +27,7 @@ int main() {
 
        try {
             auto res = ip.eval(input);
-            std::cout << res.toString() << std::endl;
+            std::cout << "ans: " << res.toString() << std::endl;
        } catch(const std::exception& e) {
            std::cout << "error: " << e.what() << std::endl;
        }
