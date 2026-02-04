@@ -1,5 +1,6 @@
 #include "../../include/expr-eval/backend/runtime.h"
 #include <cmath>
+#include <cstddef>
 #include <stdexcept>
 
 RuntimeVar::RuntimeVar()
@@ -74,7 +75,7 @@ RuntimeVar RuntimeVar::operator+(const RuntimeVar &other) const {
 
 RuntimeVar RuntimeVar::operator-(const RuntimeVar &other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '-' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     if (type == RuntimeVarType::NUMBER) {
@@ -87,7 +88,7 @@ RuntimeVar RuntimeVar::operator-(const RuntimeVar &other) const {
 
 RuntimeVar RuntimeVar::operator*(const RuntimeVar &other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '*' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     if (type == RuntimeVarType::NUMBER) {
@@ -100,7 +101,7 @@ RuntimeVar RuntimeVar::operator*(const RuntimeVar &other) const {
 
 RuntimeVar RuntimeVar::operator/(const RuntimeVar &other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '/' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     if (type == RuntimeVarType::NUMBER) {
@@ -113,7 +114,7 @@ RuntimeVar RuntimeVar::operator/(const RuntimeVar &other) const {
 
 RuntimeVar RuntimeVar::operator%(const RuntimeVar& other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '%' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     if (type == RuntimeVarType::NUMBER) {
@@ -126,7 +127,7 @@ RuntimeVar RuntimeVar::operator%(const RuntimeVar& other) const {
 
 RuntimeVar RuntimeVar::operator==(const RuntimeVar& other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '==' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     const auto res = value == other.value;
@@ -135,7 +136,7 @@ RuntimeVar RuntimeVar::operator==(const RuntimeVar& other) const {
 
 RuntimeVar RuntimeVar::operator!=(const RuntimeVar& other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '!=' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     const auto res = value != other.value;
@@ -144,7 +145,7 @@ RuntimeVar RuntimeVar::operator!=(const RuntimeVar& other) const {
 
 RuntimeVar RuntimeVar::operator>(const RuntimeVar& other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '>' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     // TODO ...
@@ -158,7 +159,7 @@ RuntimeVar RuntimeVar::operator>(const RuntimeVar& other) const {
 
 RuntimeVar RuntimeVar::operator>=(const RuntimeVar& other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '>=' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     // TODO ...
@@ -172,7 +173,7 @@ RuntimeVar RuntimeVar::operator>=(const RuntimeVar& other) const {
 
 RuntimeVar RuntimeVar::operator<(const RuntimeVar& other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '<' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     // TODO ...
@@ -186,7 +187,7 @@ RuntimeVar RuntimeVar::operator<(const RuntimeVar& other) const {
 
 RuntimeVar RuntimeVar::operator<=(const RuntimeVar& other) const {
     if (type != other.type)
-        throw std::runtime_error(std::format("Expected same types to op '+' but found {} and {}.",
+        throw std::runtime_error(std::format("Expected same types to op '<=' but found {} and {}.",
                                              typeStr(), other.typeStr()));
 
     // TODO ...
@@ -196,4 +197,14 @@ RuntimeVar RuntimeVar::operator<=(const RuntimeVar& other) const {
     }
 
     throw std::runtime_error(std::format("Op '<=' not supported for type {}", typeStr()));
+}
+
+RuntimeVar RuntimeVar::operator||(const RuntimeVar& other) const {
+    const auto res = toBool() || other.toBool();
+    return RuntimeVar{res};
+}
+
+RuntimeVar RuntimeVar::operator&&(const RuntimeVar& other) const {
+    const auto res = toBool() && other.toBool();
+    return RuntimeVar{res};
 }

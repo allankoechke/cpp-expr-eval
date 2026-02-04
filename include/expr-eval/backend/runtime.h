@@ -53,6 +53,10 @@ struct RuntimeVar {
     RuntimeVar operator<(const RuntimeVar& other) const;
 
     RuntimeVar operator<=(const RuntimeVar& other) const;
+
+    RuntimeVar operator||(const RuntimeVar& other) const;
+
+    RuntimeVar operator&&(const RuntimeVar& other) const;
 };
 
 #endif // RUNTIME_H

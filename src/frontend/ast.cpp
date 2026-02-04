@@ -84,6 +84,10 @@ RuntimeVar BinaryExpr::eval(std::unordered_map<std::string, RuntimeVar> &vars) {
     if (op == "/") return _l / _r;
     if (op == "%") return _l % _r;
 
+    // ||, &&
+    if (op == "||") return _l || _r;
+    if (op == "&&") return _l && _r;
+
     // Equality
     if (op == "==") return _l == _r;
     if (op == "!=") return _l != _r;

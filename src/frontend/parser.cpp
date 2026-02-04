@@ -100,15 +100,23 @@ std::unique_ptr<Node> Parser::parseAdditives() {
 
 std::unique_ptr<Node> Parser::parseFactors() {
     auto left = parsePrimary();
-    while (!eof() && (
-               peek().type == TokenType::TOK_MULT_OP ||
-               peek().type == TokenType::TOK_DIV_OP ||
-               peek().type == TokenType::TOK_MOD_OP
-           )) {
-        std::string op = advance().value;
-        auto right = parsePrimary();
+    while (!eof()) {
+        if ( peek().type == TokenType::TOK_MULT_OP ||
+            peek().type == TokenType::TOK_DIV_OP ||
+            peek().type == TokenType::TOK_MOD_OP) {
+            std::string op = advance().value;
+            auto right = parsePrimary();
 
-        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+            left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+        }
+
+        else if(peek().type == TokenType::TOK_OPEN_PAREN) {
+            auto right = parsePrimary();
+            left = std::make_unique<BinaryExpr>(std::move(left), "*", std::move(right));
+        }
+
+        else
+            break;
     }
 
     return left;
