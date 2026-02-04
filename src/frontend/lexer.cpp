@@ -3,6 +3,7 @@
 #include <cctype>
 #include <stdexcept>
 #include <format>
+#include <iostream>
 
 Token::Token(const TokenType _type, std::string _name, std::string _value)
     : type(_type),
@@ -104,6 +105,54 @@ void Lexer::tokenizeOperators() {
         m_tokens.emplace_back(TokenType::TOK_MULT_OP, "TOK_MULT_LIT", std::string{op});
     else if (op == '/')
         m_tokens.emplace_back(TokenType::TOK_DIV_OP, "TOK_DIV_LIT", std::string{op});
+    else if (op == '%')
+        m_tokens.emplace_back(TokenType::TOK_MOD_OP, "TOK_MOD_OP", std::string{op});
+
+    else if (op == '|') {
+        if(peek() == '|') { // ||
+            m_tokens.emplace_back(TokenType::TOK_OR, "TOK_OR", std::string{"||"});
+            advance();
+        }
+    }
+
+    else if (op == '&') {
+        if(peek() == '&') { // &&
+            m_tokens.emplace_back(TokenType::TOK_AND, "TOK_AND", std::string{"&&"});
+            advance();
+        }
+    }
+
+    else if (op == '=') {
+        if(peek() == '=') { // ==
+            m_tokens.emplace_back(TokenType::TOK_EQ, "TOK_EQ", std::string{"=="});
+            advance();
+        }
+    }
+
+    else if (op == '!') {
+        if(peek() == '=') { // !=
+            m_tokens.emplace_back(TokenType::TOK_NEQ, "TOK_NEQ", std::string{"!="});
+            advance();
+        }
+    }
+
+    else if (op == '<') {
+        if(peek() == '=') { // <=
+            m_tokens.emplace_back(TokenType::TOK_LT_EQ, "TOK_LT_EQ", std::string{"<="});
+            advance();
+        } else { // <
+            m_tokens.emplace_back(TokenType::TOK_LT, "TOK_LT", std::string{"<"});
+        }
+    }
+
+    else if (op == '>') {
+        if(peek() == '=') { // >=
+            m_tokens.emplace_back(TokenType::TOK_GT_EQ, "TOK_GT_EQ", std::string{">="});
+            advance();
+        } else { // >
+            m_tokens.emplace_back(TokenType::TOK_GT, "TOK_GT", std::string{">"});
+        }
+    }
 
     else throw std::runtime_error(std::format("Unknown Character `{}` in the input string", peek()));
 }

@@ -20,6 +20,14 @@ public:
 private:
     std::unique_ptr<Node> parseExpr();
 
+    std::unique_ptr<Node> parseOr(); // ||
+
+    std::unique_ptr<Node> parseAnd(); // &&
+
+    std::unique_ptr<Node> parseEquality(); // == !=
+
+    std::unique_ptr<Node> parseRelational(); // < > <= >=
+
     std::unique_ptr<Node> parseAdditives();
 
     std::unique_ptr<Node> parseFactors();

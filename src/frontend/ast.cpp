@@ -82,6 +82,17 @@ RuntimeVar BinaryExpr::eval(std::unordered_map<std::string, RuntimeVar> &vars) {
     if (op == "-") return _l - _r;
     if (op == "*") return _l * _r;
     if (op == "/") return _l / _r;
+    if (op == "%") return _l % _r;
+
+    // Equality
+    if (op == "==") return _l == _r;
+    if (op == "!=") return _l != _r;
+
+    // Relational
+    if (op == ">") return _l > _r;
+    if (op == ">=") return _l >= _r;
+    if (op == "<") return _l < _r;
+    if (op == "<=") return _l <= _r;
 
     throw std::runtime_error(std::format("Unimplemented op `{}`", op));
 }

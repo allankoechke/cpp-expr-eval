@@ -16,6 +16,18 @@ enum class TokenType {
     TOK_SUB_OP,
     TOK_DIV_OP,
     TOK_MULT_OP,
+    TOK_MOD_OP,
+
+    TOK_OR, // ||
+    TOK_AND, // &&
+
+    TOK_EQ, // ==
+    TOK_NEQ, // !=
+    TOK_LT, // <
+    TOK_LT_EQ, // <=
+    TOK_GT, // >
+    TOK_GT_EQ, // >=
+
 
     TOK_OPEN_PAREN, // (
     TOK_CLOSE_PAREN, // )

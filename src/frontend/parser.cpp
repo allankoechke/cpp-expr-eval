@@ -26,7 +26,61 @@ Program &Parser::root() {
 }
 
 std::unique_ptr<Node> Parser::parseExpr() {
-    return parseAdditives();
+    return parseOr();
+}
+
+// a || b
+std::unique_ptr<Node> Parser::parseOr() {
+    auto left = parseAnd();
+    while (!eof() && (
+               peek().type == TokenType::TOK_OR
+           )) {
+        std::string op = advance().value;
+        auto right = parseAnd();
+
+        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+    }
+
+    return left;
+}
+
+std::unique_ptr<Node> Parser::parseAnd() {
+    auto left = parseEquality();
+    while (!eof() && ( peek().type == TokenType::TOK_AND )) {
+        std::string op = advance().value;
+        auto right = parseEquality();
+
+        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+    }
+
+    return left;
+}
+
+std::unique_ptr<Node> Parser::parseEquality() {
+    auto left = parseRelational();
+    while (!eof() && ( peek().type == TokenType::TOK_EQ || peek().type == TokenType::TOK_NEQ )) {
+        std::string op = advance().value;
+        auto right = parseRelational();
+
+        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+    }
+
+    return left;
+}
+
+std::unique_ptr<Node> Parser::parseRelational() {
+    auto left = parseAdditives();
+    while (!eof() && ( peek().type == TokenType::TOK_LT
+        || peek().type == TokenType::TOK_LT_EQ
+        || peek().type == TokenType::TOK_GT
+        || peek().type == TokenType::TOK_GT_EQ )) {
+        std::string op = advance().value;
+        auto right = parseAdditives();
+
+        left = std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+    }
+
+    return left;
 }
 
 std::unique_ptr<Node> Parser::parseAdditives() {
@@ -48,7 +102,8 @@ std::unique_ptr<Node> Parser::parseFactors() {
     auto left = parsePrimary();
     while (!eof() && (
                peek().type == TokenType::TOK_MULT_OP ||
-               peek().type == TokenType::TOK_DIV_OP
+               peek().type == TokenType::TOK_DIV_OP ||
+               peek().type == TokenType::TOK_MOD_OP
            )) {
         std::string op = advance().value;
         auto right = parsePrimary();
